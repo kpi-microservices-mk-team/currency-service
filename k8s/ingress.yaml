@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: currency-service-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /api/currency-service
+            pathType: "Prefix"
+            backend:
+              service:
+                name: currency-service
+                port:
+                  number: 80
