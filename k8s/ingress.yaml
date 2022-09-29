@@ -8,7 +8,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: "/api/v1"  # path: / -> http://172.30.86.27/api/v1/rates
+          - path: "/api/v1"  # path: / -> http://{minikube_ip}/api/v1/rates
             pathType: "Prefix"
             backend:
               service:

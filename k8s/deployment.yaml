@@ -13,7 +13,7 @@ spec:
         app: currency-service
     spec:
       containers:
-        - image: currency-service:2.2
+        - image: currency-service:1.0.5
           imagePullPolicy: Never
           name: currency-service
           ports:

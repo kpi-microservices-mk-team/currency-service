@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 
 const UNKNOWN = "UNKNOWN"
 
-function Rates() {
+function Convert() {
 
     const [rates, setRates] = useState(UNKNOWN);
 
@@ -22,4 +22,4 @@ function Rates() {
     );
 }
 
-export default Rates;
+export default Convert;
