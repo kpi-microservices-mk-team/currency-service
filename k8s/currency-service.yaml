@@ -6,6 +6,8 @@ spec:
   type: ClusterIP
   ports:
     - port: 80
-      targetPort: 8028
+      targetPort: 8080
   selector:
     app: currency-service
+
+#    http://localhost:8001/api/v1/namespaces/default/services/currency-service/proxy/api/v1/rates

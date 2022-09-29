@@ -1,16 +1,15 @@
 package com.example.currencyservice.infrastructure.exchangerate;
 
 import com.example.currencyservice.infrastructure.bean.CurrencyRateToUSD;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,7 @@ public class ExchangeRateProvider {
 
     private final RestTemplate restTemplate;
 
+    @Getter
     private List<CurrencyRateToUSD> currencyList = new ArrayList<>();
 
     @Scheduled(cron = "10 * * * * ?")
@@ -33,10 +33,6 @@ public class ExchangeRateProvider {
         currencyList.add(currencyRateResponse.getBody());
         log.info("Currency rates are updated: " + LocalDateTime.now());
         return currencyRateResponse.getBody();
-    }
-
-    public List<CurrencyRateToUSD> getCurrencyList() {
-        return currencyList;
     }
 
     @PostConstruct

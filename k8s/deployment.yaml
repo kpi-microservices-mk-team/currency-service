@@ -13,8 +13,8 @@ spec:
         app: currency-service
     spec:
       containers:
-        - image: currency-service:0.1
+        - image: currency-service:2.2
           imagePullPolicy: Never
           name: currency-service
           ports:
-            - containerPort: 8028
+            - containerPort: 8080
