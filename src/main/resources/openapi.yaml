@@ -17,7 +17,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'dto/Rates.yaml'
+                $ref: 'dto/CurrencyRate.yaml'
     post:
       tags:
         - update-rate

@@ -13,8 +13,11 @@ spec:
         app: currency-service
     spec:
       containers:
-        - image: currency-service:1.0.5
-          imagePullPolicy: Never
+        - image: makstrexa/currency-service:1.0.9
+          imagePullPolicy: Always
           name: currency-service
           ports:
             - containerPort: 8080
+          envFrom:
+            - configMapRef:
+               name: currency-service-config

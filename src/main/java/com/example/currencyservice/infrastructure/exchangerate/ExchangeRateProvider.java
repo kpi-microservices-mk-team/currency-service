@@ -1,7 +1,7 @@
 package com.example.currencyservice.infrastructure.exchangerate;
 
 import com.example.currencyservice.infrastructure.bean.CurrencyRateToUSD;
-import lombok.Getter;
+import com.example.currencyservice.infrastructure.repository.RatesRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,8 +11,10 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
+
+import static com.example.currencyservice.infrastructure.exchangerate.CurrencyRatesPersistenceMapper.toPersistenceDto;
+import static java.util.Objects.nonNull;
 
 @Service
 @Slf4j
@@ -24,15 +26,27 @@ public class ExchangeRateProvider {
 
     private final RestTemplate restTemplate;
 
-    @Getter
-    private List<CurrencyRateToUSD> currencyList = new ArrayList<>();
+    private final RatesRepository ratesRepository;
+
+    public CurrencyRateToUSD provideRates() {
+        final var allRates = ratesRepository.findAll();
+        final var ratesToUsd = CurrencyRatesPersistenceMapper.fromPersistenceDto(allRates);
+
+        return ratesToUsd.stream()
+                .max(Comparator.comparing(CurrencyRateToUSD::getDate))
+                .orElse(null);
+    }
 
     @Scheduled(cron = "10 * * * * ?")
-    public CurrencyRateToUSD provideCurrencyRate() {
+    private void provideCurrencyRate() {
         final var currencyRateResponse = restTemplate.getForEntity(exchangeApiUrl, CurrencyRateToUSD.class);
-        currencyList.add(currencyRateResponse.getBody());
+        final var currencyRateToUsd = nonNull(currencyRateResponse.getBody())
+                ? currencyRateResponse.getBody()
+                : null;
+        final var persistenceCurrencyRates = toPersistenceDto(currencyRateToUsd);
+        ratesRepository.saveAll(persistenceCurrencyRates);
+
         log.info("Currency rates are updated: " + LocalDateTime.now());
-        return currencyRateResponse.getBody();
     }
 
     @PostConstruct

@@ -18,9 +18,7 @@ public class ConvertRateUseCase {
     private final ExchangeRateProvider exchangeRateProvider;
 
     public ConvertedValue convertRate(String target, String from, double value) {
-        final var freshRates = exchangeRateProvider.getCurrencyList().stream()
-                .max(Comparator.comparing(CurrencyRateToUSD::getDate))
-                .orElseThrow(() -> new NoSuchElementException("Cannot find such as rates"));
+        final var freshRates = exchangeRateProvider.provideRates();
 
         final var targetValue = freshRates.getRates().get(target.toLowerCase());
         final var fromValue = freshRates.getRates().get(from.toLowerCase());
